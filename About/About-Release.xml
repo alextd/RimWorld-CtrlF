@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>Ctrl F</name>
+	<author>Uuugggg</author>
+	<supportedVersions>
+		<li>1.4</li>
+	</supportedVersions>
+	<packageId>Uuugggg.CtrlF</packageId>
+	<description>Press Ctrl-F to find anything on the map, with very thorough options to filter the list.</description>
+	<url>https://steamcommunity.com/id/Uuugggg/myworkshopfiles/?appid=294100</url>
+</ModMetaData>
