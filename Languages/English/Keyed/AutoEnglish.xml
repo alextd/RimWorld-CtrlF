@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+	<TD.CtrlF>Ctrl-F</TD.CtrlF>
+	
+	<TD.Maximum0Displayed>(Maximum {0} displayed)</TD.Maximum0Displayed>
+	<TD.LabelCountThings>{0} thing(s)</TD.LabelCountThings>
+	<TD.SelectAllGameAllowsUpTo80>Select All ( game allows up to 80 )</TD.SelectAllGameAllowsUpTo80>
+	
+	<TD.RefreshTheListIsOnlySavedWhenTheFilterIsChangedOrTheTabIsOpened>Refresh (The list is only saved when the filter is changed or the tab is opened)</TD.RefreshTheListIsOnlySavedWhenTheFilterIsChangedOrTheTabIsOpened>
+	<TD.ContinuousRefreshAboutEverySecond>Continuous Refresh (about every second)</TD.ContinuousRefreshAboutEverySecond>
+	
+</LanguageData>

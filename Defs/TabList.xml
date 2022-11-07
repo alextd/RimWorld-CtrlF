@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<MainButtonDef>
+		<defName>TD_List</defName>
+		<label>Find</label>
+		<description>Find and list things on the map.</description>
+		<tabWindowClass>Ctrl_F.MainTabWindow_List</tabWindowClass>
+		<order>95</order>
+		<validWithoutMap>false</validWithoutMap>
+	</MainButtonDef>
+
+	<KeyBindingDef>
+		<category>MainTabs</category>
+		<defName>OpenFindTab</defName>
+		<label>Ctrl-F: Find (Ctrl + key)</label>
+		<defaultKeyCodeA>F</defaultKeyCodeA>
+	</KeyBindingDef>
+
+</Defs>
