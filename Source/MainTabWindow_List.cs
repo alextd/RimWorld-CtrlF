@@ -21,6 +21,11 @@ namespace Ctrl_F
 			thingsDrawer = new ThingListDrawer(findDesc);
 		}
 
+		public override void PostClose()
+		{
+			Current.Game.GetComponent<TD_Find_Lib.TDFindLibGameComp>().RemoveRefresh(findDesc);
+		}
+
 		public override Vector2 RequestedTabSize => new Vector2(900, base.RequestedTabSize.y);
 
 		public override void PreOpen()
