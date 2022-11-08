@@ -25,7 +25,8 @@ namespace Ctrl_F
 		{
 			if (CtrlFDefOf.OpenFindTab.IsDownEvent && Event.current.control)
 			{
-				FindDescription desc = new FindDescription(Find.CurrentMap);
+				FindDescription desc = new FindDescription(Find.CurrentMap)
+				{ name = "Ctrl-F" };
 
 				ListFilter filter = FilterForSelected();
 				bool selectedFilter = filter != null;

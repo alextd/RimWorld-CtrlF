@@ -16,7 +16,7 @@ namespace Ctrl_F
 		private ThingListDrawer thingsDrawer;
 		public void SetFindDesc(FindDescription d = null, bool locked = false)
 		{
-			findDesc = d ?? new FindDescription(Find.CurrentMap);
+			findDesc = d ?? new FindDescription(Find.CurrentMap) { name = "Ctrl-F" };
 			filterDrawer = new FindDescriptionDrawer(findDesc, locked);
 			thingsDrawer = new ThingListDrawer(findDesc);
 		}
@@ -50,7 +50,11 @@ namespace Ctrl_F
 			Widgets.DrawLineVertical(listRect.x - 3, 0, listRect.height);
 			GUI.color = Color.white;
 
-			filterDrawer.DrawFindDescription(filterRect, TDFindLibListWindow.ButtonOpenSettings);
+			filterDrawer.DrawFindDescription(filterRect, row =>
+			{
+				FilterStorageUtil.ButtonOpenSettings(row);
+				FilterStorageUtil.ButtonChooseLoadFilter(row, d => SetFindDesc(d.CloneForUse(Find.CurrentMap)));
+			});
 			thingsDrawer.DrawThingList(listRect);
 		}
 
