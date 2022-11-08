@@ -16,9 +16,9 @@ namespace Ctrl_F
 		public static MainButtonDef TD_List;
 	}
 	//GameComponent to handle keypress, contiuous refreshing list, and alerts
-	class ListEverythingGameComp : GameComponent
+	class CtrlFGameComponent : GameComponent
 	{
-		public ListEverythingGameComp(Game g):base() { }
+		public CtrlFGameComponent(Game g):base() { }
 		
 		//Ctrl-F handler
 		public override void GameComponentOnGUI()
@@ -73,20 +73,6 @@ namespace Ctrl_F
 			}
 
 			return null;
-		}
-
-		//continuousRefresh
-		public bool continuousRefresh = false;
-		public override void GameComponentTick()
-		{
-			if (Find.TickManager.TicksGame % 60 != 0) return; //every second I guess?
-
-			if (continuousRefresh)
-			{
-				MainTabWindow_List tab = CtrlFDefOf.TD_List.TabWindow as MainTabWindow_List;
-				if (tab.IsOpen)
-					tab.findDesc.RemakeList();
-			}
 		}
 	}
 }
