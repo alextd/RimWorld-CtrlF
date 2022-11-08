@@ -45,7 +45,7 @@ namespace Ctrl_F
 			Widgets.DrawLineVertical(listRect.x - 3, 0, listRect.height);
 			GUI.color = Color.white;
 
-			filterDrawer.DrawFindDescription(filterRect);
+			filterDrawer.DrawFindDescription(filterRect, TDFindLibListWindow.ButtonOpenSettings);
 			thingsDrawer.DrawThingList(listRect);
 		}
 
