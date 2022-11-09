@@ -16,6 +16,8 @@ namespace Ctrl_F
 		private ThingListDrawer thingsDrawer;
 		public void SetFindDesc(FindDescription d = null, bool locked = false)
 		{
+			Current.Game.GetComponent<TD_Find_Lib.TDFindLibGameComp>().RemoveRefresh(findDesc);
+
 			findDesc = d ?? new FindDescription(Find.CurrentMap) { name = "Ctrl-F" };
 			filterDrawer = new FindDescriptionDrawer(findDesc, locked);
 			thingsDrawer = new ThingListDrawer(findDesc);
