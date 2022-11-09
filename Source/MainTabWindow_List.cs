@@ -14,18 +14,20 @@ namespace Ctrl_F
 		private FindDescription findDesc;
 		private FindDescriptionDrawer filterDrawer;
 		private ThingListDrawer thingsDrawer;
-		public void SetFindDesc(FindDescription d = null, bool locked = false)
+		public void SetFindDesc(FindDescription desc = null, bool locked = false)
 		{
 			Current.Game.GetComponent<TD_Find_Lib.TDFindLibGameComp>().RemoveRefresh(findDesc);
 
-			findDesc = d ?? new FindDescription(Find.CurrentMap) { name = "Ctrl-F" };
-			filterDrawer = new FindDescriptionDrawer(findDesc, locked);
+			findDesc = desc ?? new FindDescription(Find.CurrentMap) { name = "Ctrl-F" };
+			filterDrawer = new FindDescriptionDrawer(findDesc) { locked = locked };
+
+			thingsDrawer?.Close();
 			thingsDrawer = new ThingListDrawer(findDesc);
 		}
 
 		public override void PostClose()
 		{
-			Current.Game.GetComponent<TD_Find_Lib.TDFindLibGameComp>().RemoveRefresh(findDesc);
+			thingsDrawer.Close();
 		}
 
 		public override Vector2 RequestedTabSize => new Vector2(900, base.RequestedTabSize.y);
