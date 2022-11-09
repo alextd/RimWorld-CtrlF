@@ -60,7 +60,35 @@ namespace Ctrl_F
 				if(!filterDrawer.locked)
 					FilterStorageUtil.ButtonChooseLoadFilter(row, d => SetFindDesc(d.CloneForUse(Find.CurrentMap)));
 			});
-			thingsDrawer.DrawThingList(listRect);
+			thingsDrawer.DrawThingList(listRect, row =>
+			{
+				//Manual refresh
+				if (row.ButtonIcon(TexUI.RotRightTex, "TD.Refresh".Translate()))
+					findDesc.RemakeList();
+
+				//Continuous refresh
+				var comp = Current.Game.GetComponent<TDFindLibGameComp>();
+				bool refresh = comp.IsRefreshing(findDesc);
+				if (row.ButtonIconColored(TexUI.ArrowTexRight,
+					Find.TickManager.Paused ? "(Does not refresh when paused)" : "TD.ContinuousRefreshAboutEverySecond".Translate(),
+					refresh ? Color.green : Color.white,
+					Color.Lerp(Color.green, Color.white, 0.5f)))
+				{
+					if (refresh)
+						comp.RemoveRefresh(findDesc);
+					else
+						comp.RegisterRefresh(findDesc, "Ctrl-F", 60); //every 60 or so
+				}
+
+				if (Find.TickManager.Paused)
+				{
+					// Thank you publicizer
+					row.IncrementPosition(-WidgetRow.IconSize);
+					GUI.color = new Color(1, 1, 1, .5f);
+					row.Icon(FindTex.Cancel);
+					GUI.color = Color.white;
+				}
+			});
 		}
 
 		public static void OpenWith(FindDescription desc, bool locked = false, bool remake = true)
