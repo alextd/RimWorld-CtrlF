@@ -60,11 +60,7 @@ namespace Ctrl_F
 				if(!filterDrawer.locked)
 					FilterStorageUtil.ButtonChooseLoadFilter(row, d => SetFindDesc(d.CloneForUse(Find.CurrentMap)));
 
-				if (Current.Game != null &&
-					row.ButtonIcon(FindTex.Copy))
-				{
-					FilterStorageUtil.ChooseExportFilter(filterDrawer.findDesc, "Ctrl-F");
-				}
+				FilterStorageUtil.ButtonChooseExportFilter(row, filterDrawer.findDesc, "Ctrl-F");
 			});
 			thingsDrawer.DrawThingList(listRect, row =>
 			{
