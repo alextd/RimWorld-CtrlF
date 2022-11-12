@@ -46,11 +46,7 @@ namespace Ctrl_F
 			{
 				ThingDef def = thing.def;
 				if (Find.Selector.SelectedObjectsListForReading.All(o => o is Thing t && t.def == def))
-				{
-					ListFilterThingDef filterDef = (ListFilterThingDef)ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Def);
-					filterDef.sel = thing.def;
-					return filterDef;
-				}
+					return FilterForThing(thing);
 			}
 			else if (Find.Selector.SelectedZone is Zone zone)
 			{
@@ -59,21 +55,39 @@ namespace Ctrl_F
 				return filterZone;
 			}
 
-			var defs = Find.Selector.SelectedObjectsListForReading.Select(o => (o as Thing).def).ToHashSet();
+			var defStuffs = Find.Selector.SelectedObjectsListForReading.Select(o => ((o as Thing).def, (o as Thing).Stuff)).Distinct().ToList();
 
-			if (defs.Count > 0)
+			if (defStuffs.Count > 0)
 			{
-				ListFilterGroup groupFilter = (ListFilterGroup)ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Group);
-				foreach (ThingDef def in defs)
-				{
-					ListFilterThingDef defFilter = (ListFilterThingDef)ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Def);
-					defFilter.sel = def;
-					groupFilter.Children.Add(defFilter);
-				}
-				return groupFilter;
+				ListFilterGroup filterGroup = (ListFilterGroup)ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Group);
+				foreach ((ThingDef def, ThingDef stuffDef) in defStuffs)
+					filterGroup.Children.Add(FilterForThing(def, stuffDef));
+				return filterGroup;
 			}
 
 			return null;
+		}
+
+
+		public static ListFilter FilterForThing(Thing thing) => FilterForThing(thing.def, thing.Stuff);
+
+		public static ListFilter FilterForThing(ThingDef def, ThingDef stuffDef)
+		{
+			ListFilterThingDef filterDef = (ListFilterThingDef)ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Def);
+			filterDef.sel = def;
+			if(stuffDef == null)
+				return filterDef;
+
+			ListFilterGroup filterGroup = (ListFilterGroup)ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Group);
+			filterGroup.any = false;  //All
+
+			filterGroup.Children.Add(filterDef, remake: false);
+
+			ListFilterStuff filterStuff = (ListFilterStuff)ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Stuff);
+			filterStuff.sel = stuffDef;
+			filterGroup.Children.Add(filterStuff, remake: false);
+
+			return filterGroup;
 		}
 	}
 }
