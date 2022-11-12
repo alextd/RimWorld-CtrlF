@@ -57,9 +57,7 @@ namespace Ctrl_F
 			filterDrawer.DrawFindDescription(filterRect, row =>
 			{
 				FilterStorageUtil.ButtonOpenSettings(row);
-				if(!filterDrawer.locked)
-					FilterStorageUtil.ButtonChooseLoadFilter(row, d => SetFindDesc(d.CloneForUse(Find.CurrentMap)));
-
+				FilterStorageUtil.ButtonChooseLoadFilter(row, d => SetFindDesc(d.CloneForUse(Find.CurrentMap), locked: filterDrawer.locked));
 				FilterStorageUtil.ButtonChooseExportFilter(row, filterDrawer.findDesc, "Ctrl-F");
 			});
 			thingsDrawer.DrawThingList(listRect, row =>
