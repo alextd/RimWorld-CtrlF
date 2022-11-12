@@ -34,8 +34,8 @@ namespace Ctrl_F
 				if (!selectedFilter)
 					filter = ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Name);
 
-				desc.Children.Add(filter, focus: true);
-				MainTabWindow_List.OpenWith(desc, locked: selectedFilter, remake: selectedFilter);
+				desc.Children.Add(filter, remake: selectedFilter, focus: true);
+				MainTabWindow_List.OpenWith(desc, locked: selectedFilter);
 			}
 		}
 

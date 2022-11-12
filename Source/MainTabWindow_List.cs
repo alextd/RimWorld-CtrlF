@@ -93,11 +93,10 @@ namespace Ctrl_F
 			});
 		}
 
-		public static void OpenWith(FindDescription desc, bool locked = false, bool remake = true)
+		public static void OpenWith(FindDescription desc, bool locked = false)
 		{
 			MainTabWindow_List tab = CtrlFDefOf.TD_List.TabWindow as MainTabWindow_List;
 			tab.SetFindDesc(desc, locked);
-			if(remake)	tab.findDesc.RemakeList();
 			Find.MainTabsRoot.SetCurrentTab(CtrlFDefOf.TD_List);
 		}
 	}
