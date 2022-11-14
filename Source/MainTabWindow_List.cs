@@ -59,7 +59,8 @@ namespace Ctrl_F
 				FilterStorageUtil.ButtonOpenSettings(row);
 				FilterStorageUtil.ButtonChooseLoadFilter(row,
 					d => SetFindDesc(d, locked: filterDrawer.locked),
-					new CloneArgs() {type = CloneType.Use, map = Find.CurrentMap });
+					"Ctrl-F",
+					new FindDescription.CloneArgs() {type = FindDescription.CloneType.Use, map = Find.CurrentMap });
 				FilterStorageUtil.ButtonChooseExportFilter(row, filterDrawer.findDesc, "Ctrl-F");
 			});
 			thingsDrawer.DrawThingList(listRect, row =>
