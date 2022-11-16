@@ -20,7 +20,7 @@ namespace Ctrl_F
 			Current.Game.GetComponent<TD_Find_Lib.TDFindLibGameComp>().RemoveRefresh(findDesc);
 
 			findDesc = desc ?? new FindDescription(Find.CurrentMap) { name = "Ctrl-F Search" };
-			filterDrawer = new FindDescriptionDrawer(findDesc, "Ctrl-F") { locked = locked };
+			filterDrawer = new FindDescriptionDrawer(findDesc, "Ctrl-F Search") { locked = locked };
 
 			listWindow.SetFindDesc(findDesc);
 		}
@@ -114,6 +114,7 @@ namespace Ctrl_F
 			//doCloseX = true;
 			closeOnAccept = false;
 			closeOnCancel = false;
+			//closing controlled by Search window.
 			preventCameraMotion = false;
 			resizeable = true;
 			draggable = true;
@@ -135,6 +136,14 @@ namespace Ctrl_F
 
 		public override void DoWindowContents(Rect fillRect)
 		{
+			Text.Font = GameFont.Medium;
+			Text.Anchor = TextAnchor.UpperCenter;
+			Rect headerRect = fillRect.TopPartPixels(Text.LineHeight).AtZero();
+			Widgets.Label(headerRect, "Ctrl-F Found Things");
+			Text.Anchor = default;
+
+			fillRect.yMin = headerRect.yMax;
+
 			thingsDrawer.DrawThingList(fillRect, row =>
 			{
 				//Manual refresh
