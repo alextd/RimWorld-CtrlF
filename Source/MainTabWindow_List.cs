@@ -9,7 +9,7 @@ using TD_Find_Lib;
 
 namespace Ctrl_F
 {
-	public class MainTabWindow_List : MainTabWindow
+	public class MainTabWindow_List : MainTabWindow, IFilterReceiver
 	{
 		private FindDescription findDesc;
 		private FindDescriptionDrawer filterDrawer;
@@ -23,6 +23,11 @@ namespace Ctrl_F
 
 			thingsDrawer?.Close();
 			thingsDrawer = new ThingListDrawer(findDesc);
+		}
+
+		public MainTabWindow_List()
+		{
+			FilterTransfer.Register(this);
 		}
 
 		public override void PostClose()
@@ -57,7 +62,7 @@ namespace Ctrl_F
 			filterDrawer.DrawFindDescription(filterRect, row =>
 			{
 				FilterStorageUtil.ButtonOpenSettings(row);
-				FilterStorageUtil.ButtonChooseLoadFilter(row,
+				FilterStorageUtil.ButtonChooseImportFilter(row,
 					d => SetFindDesc(d, locked: filterDrawer.locked),
 					"Ctrl-F",
 					new FindDescription.CloneArgs() {type = FindDescription.CloneType.Use, map = Find.CurrentMap });
@@ -100,5 +105,11 @@ namespace Ctrl_F
 			tab.SetFindDesc(desc, locked);
 			Find.MainTabsRoot.SetCurrentTab(CtrlFDefOf.TD_List);
 		}
+
+
+		public string Source => "Ctrl-F";
+		public string ReceiveName => "Ctrl-F";
+		public FindDescription.CloneArgs CloneArgs => new FindDescription.CloneArgs() { type = FindDescription.CloneType.Use, map = Find.CurrentMap };
+		public void Receive(FindDescription desc) => OpenWith(desc);
 	}
 }
