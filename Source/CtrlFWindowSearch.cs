@@ -9,33 +9,44 @@ using TD_Find_Lib;
 
 namespace Ctrl_F
 {
-	public class MainTabWindow_List : MainTabWindow, IFilterReceiver
+	public class CtrlFWindowSearch : Window
 	{
-		private FindDescription findDesc;
+		public FindDescription findDesc;
 		private FindDescriptionDrawer filterDrawer;
-		private ThingListDrawer thingsDrawer;
+		private CtrlFWindowList listWindow;
+
 		public void SetFindDesc(FindDescription desc = null, bool locked = false)
 		{
 			Current.Game.GetComponent<TD_Find_Lib.TDFindLibGameComp>().RemoveRefresh(findDesc);
 
-			findDesc = desc ?? new FindDescription(Find.CurrentMap) { name = "Ctrl-F" };
-			filterDrawer = new FindDescriptionDrawer(findDesc) { locked = locked };
+			findDesc = desc ?? new FindDescription(Find.CurrentMap) { name = "Ctrl-F Search" };
+			filterDrawer = new FindDescriptionDrawer(findDesc, "Ctrl-F") { locked = locked };
 
-			thingsDrawer?.Close();
-			thingsDrawer = new ThingListDrawer(findDesc);
+			listWindow.SetFindDesc(findDesc);
 		}
 
-		public MainTabWindow_List()
+		public CtrlFWindowSearch()
 		{
-			FilterTransfer.Register(this);
+			listWindow = new CtrlFWindowList();
+
+			layer = WindowLayer.GameUI;
+			doCloseButton = true;
+			doCloseX = true;
+			closeOnAccept = false;
+			//closeOnCancel = false;
+			preventCameraMotion = false;
+			resizeable = true;
+			draggable = true;
 		}
 
-		public override void PostClose()
+		public override Vector2 InitialSize => new Vector2(540, 720);
+
+		public override void SetInitialSizeAndPosition()
 		{
-			thingsDrawer.Close();
+			base.SetInitialSizeAndPosition();
+			windowRect.x = 0f;
+			windowRect.y = 0f;
 		}
-
-		public override Vector2 RequestedTabSize => new Vector2(900, base.RequestedTabSize.y);
 
 		public override void PreOpen()
 		{
@@ -47,28 +58,84 @@ namespace Ctrl_F
 				//Don't make the list - everything would match.
 			}
 			else
-				findDesc.RemakeList();	
+				findDesc.RemakeList();
+		}
+
+		public override void PostOpen()
+		{
+			Find.WindowStack.Add(listWindow);
+		}
+
+		public override void PostClose()
+		{
+			Find.WindowStack.TryRemove(listWindow, false);
 		}
 
 		public override void DoWindowContents(Rect fillRect)
 		{
-			Rect filterRect = fillRect.LeftPart(0.60f);
-			Rect listRect = fillRect.RightPart(0.39f);
-
-			GUI.color = Color.grey;
-			Widgets.DrawLineVertical(listRect.x - 3, 0, listRect.height);
-			GUI.color = Color.white;
-
-			filterDrawer.DrawFindDescription(filterRect, row =>
+			filterDrawer.DrawFindDescription(fillRect, row =>
 			{
 				FilterStorageUtil.ButtonOpenSettings(row);
 				FilterStorageUtil.ButtonChooseImportFilter(row,
 					d => SetFindDesc(d, locked: filterDrawer.locked),
 					"Ctrl-F",
-					new FindDescription.CloneArgs() {type = FindDescription.CloneType.Use, map = Find.CurrentMap });
+					new FindDescription.CloneArgs() { type = FindDescription.CloneType.Use, map = Find.CurrentMap });
 				FilterStorageUtil.ButtonChooseExportFilter(row, filterDrawer.findDesc, "Ctrl-F");
 			});
-			thingsDrawer.DrawThingList(listRect, row =>
+		}
+
+		public static CtrlFWindowSearch OpenWith(FindDescription desc, bool locked = false)
+		{
+			CtrlFWindowSearch window = new CtrlFWindowSearch();
+			window.SetFindDesc(desc, locked);
+			Find.WindowStack.Add(window);
+			return window;
+		}
+	}
+
+	public class CtrlFWindowList : Window
+	{
+		private FindDescription findDesc;
+		private ThingListDrawer thingsDrawer;
+		public void SetFindDesc(FindDescription desc = null)
+		{
+			findDesc = desc;
+
+			thingsDrawer?.Close();
+			thingsDrawer = new ThingListDrawer(desc);
+		}
+
+		public CtrlFWindowList()
+		{
+			layer = WindowLayer.GameUI;
+			//soundAppear = null;
+			//soundClose = SoundDefOf.TabClose;
+			//doCloseButton = true;
+			//doCloseX = true;
+			closeOnAccept = false;
+			closeOnCancel = false;
+			preventCameraMotion = false;
+			resizeable = true;
+			draggable = true;
+		}
+
+		public override Vector2 InitialSize => new Vector2(360, 720);
+
+		public override void SetInitialSizeAndPosition()
+		{
+			base.SetInitialSizeAndPosition();
+			windowRect.x = UI.screenWidth - windowRect.width;
+			windowRect.y = 0;
+		}
+
+		public override void PostClose()
+		{
+			thingsDrawer.Close();
+		}
+
+		public override void DoWindowContents(Rect fillRect)
+		{
+			thingsDrawer.DrawThingList(fillRect, row =>
 			{
 				//Manual refresh
 				if (row.ButtonIcon(TexUI.RotRightTex, "TD.Refresh".Translate()))
@@ -98,18 +165,21 @@ namespace Ctrl_F
 				}
 			});
 		}
+	}
 
-		public static void OpenWith(FindDescription desc, bool locked = false)
+	[StaticConstructorOnStartup]
+	public class CtrlFReceiver : IFilterReceiver
+	{
+		static CtrlFReceiver()
 		{
-			MainTabWindow_List tab = CtrlFDefOf.TD_List.TabWindow as MainTabWindow_List;
-			tab.SetFindDesc(desc, locked);
-			Find.MainTabsRoot.SetCurrentTab(CtrlFDefOf.TD_List);
+			FilterTransfer.Register(new CtrlFReceiver());
 		}
 
-
 		public string Source => "Ctrl-F";
-		public string ReceiveName => "Ctrl-F";
+		public string ReceiveName => "View in Ctrl-F";
 		public FindDescription.CloneArgs CloneArgs => new FindDescription.CloneArgs() { type = FindDescription.CloneType.Use, map = Find.CurrentMap };
-		public void Receive(FindDescription desc) => OpenWith(desc);
+
+		public bool CanReceive() => Find.CurrentMap != null;
+		public void Receive(FindDescription desc) => CtrlFWindowSearch.OpenWith(desc);
 	}
 }

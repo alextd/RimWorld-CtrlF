@@ -12,21 +12,31 @@ namespace Ctrl_F
 	[DefOf]
 	public static class CtrlFDefOf
 	{
-		public static KeyBindingDef OpenFindTab;
-		public static MainButtonDef TD_List;
+		public static KeyBindingDef OpenCtrlF;
 	}
 	//GameComponent to handle keypress, contiuous refreshing list, and alerts
 	class CtrlFGameComponent : GameComponent
 	{
+		public CtrlFWindowSearch window;
 		public CtrlFGameComponent(Game g):base() { }
 		
 		//Ctrl-F handler
 		public override void GameComponentOnGUI()
 		{
-			if (CtrlFDefOf.OpenFindTab.IsDownEvent && Event.current.control)
+			if (CtrlFDefOf.OpenCtrlF.KeyDownEvent && Event.current.control)
 			{
+				Log.Message($"CtrlFGameComponent: {Event.current}");
+				if(Event.current.shift && window != null)
+				{
+					// Open what already exists, without changing the filters.
+					window.findDesc.RemakeList();
+					Find.WindowStack.Add(window);
+					Event.current.Use();
+					return;
+				}
+
 				FindDescription desc = new FindDescription(Find.CurrentMap)
-				{ name = "Ctrl-F" };
+				{ name = "Ctrl-F Search" };
 
 				ListFilter filter = FilterForSelected();
 				bool selectedFilter = filter != null;
@@ -35,7 +45,8 @@ namespace Ctrl_F
 					filter = ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Name);
 
 				desc.Children.Add(filter, remake: selectedFilter, focus: true);
-				MainTabWindow_List.OpenWith(desc, locked: selectedFilter);
+				window = CtrlFWindowSearch.OpenWith(desc, locked: selectedFilter);
+				Event.current.Use();
 			}
 		}
 
