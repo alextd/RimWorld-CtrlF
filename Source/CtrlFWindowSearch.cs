@@ -39,7 +39,7 @@ namespace Ctrl_F
 			draggable = true;
 		}
 
-		public override Vector2 InitialSize => new Vector2(540, 720);
+		public override Vector2 InitialSize => new Vector2(600, 600);
 
 		public override void SetInitialSizeAndPosition()
 		{
@@ -161,7 +161,7 @@ namespace Ctrl_F
 					if (refresh)
 						comp.RemoveRefresh(findDesc);
 					else
-						comp.RegisterRefresh(findDesc, "Ctrl-F", 60); //every 60 or so
+						comp.RegisterRefresh(new CtrlFRefresh(findDesc)); //every 60 or so
 				}
 
 				if (Find.TickManager.Paused)
