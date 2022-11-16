@@ -29,8 +29,11 @@ namespace Ctrl_F
 				if(Event.current.shift && window != null)
 				{
 					// Open what already exists, without changing the filters.
-					window.findDesc.RemakeList();
-					Find.WindowStack.Add(window);
+					if (!Find.WindowStack.IsOpen(window))
+					{
+						window.findDesc.RemakeList();
+						Find.WindowStack.Add(window);
+					}
 					Event.current.Use();
 					return;
 				}
