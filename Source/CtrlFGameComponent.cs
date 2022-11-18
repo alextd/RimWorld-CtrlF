@@ -25,7 +25,6 @@ namespace Ctrl_F
 		{
 			if (CtrlFDefOf.OpenCtrlF.KeyDownEvent && Event.current.control)
 			{
-				Log.Message($"CtrlFGameComponent: {Event.current}");
 				if(Event.current.shift && window != null)
 				{
 					// Open what already exists, without changing the filters.
