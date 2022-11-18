@@ -16,16 +16,7 @@ namespace Ctrl_F
 
 		public override void OpenUI(FindDescription desc)
 		{
-			if (Current.Game.GetComponent<CtrlFGameComponent>().window is CtrlFWindowSearch window)
-			{
-				if (Find.WindowStack.IsOpen(window))
-					Find.WindowStack.Notify_ClickedInsideWindow(window);
-				else
-					Find.WindowStack.Add(window);
-			}
-			//Ctrl-F UI should be open if there is a refreshing list.
-			//else
-			//	CtrlFWindowSearch.OpenWith(desc);
+			CtrlFWindowSearch.OpenWith(desc);
 		}
 	}
 }

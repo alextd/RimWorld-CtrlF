@@ -84,14 +84,25 @@ namespace Ctrl_F
 			});
 		}
 
-		public static CtrlFWindowSearch OpenWith(FindDescription desc, bool locked = false)
+
+		public static CtrlFWindowSearch window = new CtrlFWindowSearch();
+		public static void OpenWith(FindDescription desc, bool locked = false)
 		{
-			CtrlFWindowSearch window = new CtrlFWindowSearch();
-			window.SetFindDesc(desc, locked);
-			Find.WindowStack.Add(window);
-			return window;
+			if(desc != window.findDesc)
+				window.SetFindDesc(desc, locked);
+			if(!Find.WindowStack.IsOpen(window))
+				Find.WindowStack.Add(window);
 		}
-	}
+		public static void Open()
+		{
+			//Set to top ?
+			if (!Find.WindowStack.IsOpen(window))
+			{
+				window.findDesc?.RemakeList();
+				Find.WindowStack.Add(window);
+			}
+		}
+}
 
 	public class CtrlFWindowList : Window
 	{

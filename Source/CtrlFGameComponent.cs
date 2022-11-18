@@ -17,7 +17,6 @@ namespace Ctrl_F
 	//GameComponent to handle keypress, contiuous refreshing list, and alerts
 	class CtrlFGameComponent : GameComponent
 	{
-		public CtrlFWindowSearch window;
 		public CtrlFGameComponent(Game g):base() { }
 		
 		//Ctrl-F handler
@@ -25,14 +24,9 @@ namespace Ctrl_F
 		{
 			if (CtrlFDefOf.OpenCtrlF.KeyDownEvent && Event.current.control)
 			{
-				if(Event.current.shift && window != null)
+				if(Event.current.shift)
 				{
-					// Open what already exists, without changing the filters.
-					if (!Find.WindowStack.IsOpen(window))
-					{
-						window.findDesc.RemakeList();
-						Find.WindowStack.Add(window);
-					}
+					CtrlFWindowSearch.Open();
 					Event.current.Use();
 					return;
 				}
@@ -47,7 +41,7 @@ namespace Ctrl_F
 					filter = ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Name);
 
 				desc.Children.Add(filter, remake: selectedFilter, focus: true);
-				window = CtrlFWindowSearch.OpenWith(desc, locked: selectedFilter);
+				CtrlFWindowSearch.OpenWith(desc, locked: selectedFilter);
 				Event.current.Use();
 			}
 		}
