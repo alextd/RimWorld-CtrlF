@@ -41,7 +41,7 @@ namespace Ctrl_F
 					filter = ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Name);
 
 				desc.Children.Add(filter, remake: selectedFilter, focus: true);
-				CtrlFWindowSearch.OpenWith(desc, locked: selectedFilter);
+				CtrlFWindowSearch.OpenWith(desc, locked: selectedFilter, remake:false);
 				Event.current.Use();
 			}
 		}

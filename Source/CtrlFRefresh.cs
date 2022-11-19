@@ -16,7 +16,7 @@ namespace Ctrl_F
 
 		public override void OpenUI(FindDescription desc)
 		{
-			CtrlFWindowSearch.OpenWith(desc);
+			CtrlFWindowSearch.OpenWith(desc, remake:false);
 		}
 	}
 }

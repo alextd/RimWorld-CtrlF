@@ -57,8 +57,6 @@ namespace Ctrl_F
 				findDesc.Children.Add(ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Name), remake: false, focus: true);
 				//Don't make the list - everything would match.
 			}
-			else
-				findDesc.RemakeList();
 		}
 
 		public override void PostOpen()
@@ -86,11 +84,15 @@ namespace Ctrl_F
 
 
 		public static CtrlFWindowSearch window = new CtrlFWindowSearch();
-		public static void OpenWith(FindDescription desc, bool locked = false)
+		public static void OpenWith(FindDescription desc, bool locked = false, bool remake = true)
 		{
 			if(desc != window.findDesc)
 				window.SetFindDesc(desc, locked);
-			if(!Find.WindowStack.IsOpen(window))
+
+			if (remake)
+				desc.RemakeList();
+
+			if (!Find.WindowStack.IsOpen(window))
 				Find.WindowStack.Add(window);
 		}
 		public static void Open()
