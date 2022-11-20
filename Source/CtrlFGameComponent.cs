@@ -14,7 +14,7 @@ namespace Ctrl_F
 	{
 		public static KeyBindingDef OpenCtrlF;
 	}
-	//GameComponent to handle keypress, contiuous refreshing list, and alerts
+	//GameComponent to handle keypress
 	class CtrlFGameComponent : GameComponent
 	{
 		public CtrlFGameComponent(Game g):base() { }
