@@ -17,7 +17,7 @@ namespace Ctrl_F
 
 		public void SetFindDesc(FindDescription desc = null, bool locked = false)
 		{
-			Current.Game.GetComponent<TD_Find_Lib.TDFindLibGameComp>().RemoveRefresh(findDesc);
+			CtrlFRefresh prevRefresher = Current.Game.GetComponent<TDFindLibGameComp>().GetRefresher<CtrlFRefresh>(findDesc);
 
 			findDesc = desc ?? new FindDescription()
 				{ name = "Ctrl-F Search", active = true };
@@ -25,7 +25,10 @@ namespace Ctrl_F
 			filterDrawer = new FindDescriptionDrawer(findDesc, "Ctrl-F Search") { locked = locked };
 
 			listWindow.SetFindDesc(findDesc);
-		}
+
+			if (prevRefresher != null)
+				prevRefresher.desc = findDesc;
+			}
 
 		public CtrlFWindowSearch()
 		{
@@ -116,7 +119,6 @@ namespace Ctrl_F
 		{
 			findDesc = desc;
 
-			thingsDrawer?.Close();
 			thingsDrawer = new CtrlFThingListDrawer(desc);
 		}
 
