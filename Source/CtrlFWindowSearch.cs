@@ -111,13 +111,13 @@ namespace Ctrl_F
 	public class CtrlFWindowList : Window
 	{
 		private FindDescription findDesc;
-		private ThingListDrawer thingsDrawer;
+		private CtrlFThingListDrawer thingsDrawer;
 		public void SetFindDesc(FindDescription desc = null)
 		{
 			findDesc = desc;
 
 			thingsDrawer?.Close();
-			thingsDrawer = new ThingListDrawer(desc);
+			thingsDrawer = new CtrlFThingListDrawer(desc);
 		}
 
 		public CtrlFWindowList()
@@ -159,35 +159,51 @@ namespace Ctrl_F
 
 			fillRect.yMin = headerRect.yMax;
 
-			thingsDrawer.DrawThingList(fillRect, row =>
+			thingsDrawer.DrawThingList(fillRect);
+		}
+	}
+
+	class CtrlFThingListDrawer : ThingListDrawer
+	{
+		public CtrlFThingListDrawer(FindDescription findDesc) : base(findDesc)
+		{ }
+
+		public void Close()
+		{
+			Current.Game.GetComponent<TDFindLibGameComp>().RemoveRefresh(findDesc);
+		}
+
+		public override void DrawIconButtons(WidgetRow row)
+		{
+			base.DrawIconButtons(row);
+
+			//Manual refresh
+			if (row.ButtonIcon(TexUI.RotRightTex, "TD.Refresh".Translate()))
+				findDesc.RemakeList();
+
+			//Continuous refresh
+			var comp = Current.Game.GetComponent<TDFindLibGameComp>();
+			bool refresh = comp.IsRefreshing(findDesc);
+			if (row.ButtonIconColored(TexUI.ArrowTexRight,
+				Find.TickManager.Paused ? "(Does not refresh when paused)" : "TD.ContinuousRefreshAboutEverySecond".Translate(),
+				refresh ? Color.green : Color.white,
+				Color.Lerp(Color.green, Color.white, 0.5f)))
 			{
-				//Manual refresh
-				if (row.ButtonIcon(TexUI.RotRightTex, "TD.Refresh".Translate()))
-					findDesc.RemakeList();
+				if (refresh)
+					comp.RemoveRefresh(findDesc);
+				else
+					comp.RegisterRefresh(new CtrlFRefresh(findDesc)); //every 60 or so
+			}
 
-				//Continuous refresh
-				var comp = Current.Game.GetComponent<TDFindLibGameComp>();
-				bool refresh = comp.IsRefreshing(findDesc);
-				if (row.ButtonIconColored(TexUI.ArrowTexRight,
-					Find.TickManager.Paused ? "(Does not refresh when paused)" : "TD.ContinuousRefreshAboutEverySecond".Translate(),
-					refresh ? Color.green : Color.white,
-					Color.Lerp(Color.green, Color.white, 0.5f)))
-				{
-					if (refresh)
-						comp.RemoveRefresh(findDesc);
-					else
-						comp.RegisterRefresh(new CtrlFRefresh(findDesc)); //every 60 or so
-				}
+			if (Find.TickManager.Paused)
+			{
+				// Thank you publicizer
+				row.IncrementPosition(-WidgetRow.IconSize);
+				GUI.color = new Color(1, 1, 1, .5f);
+				row.Icon(FindTex.Cancel);
+				GUI.color = Color.white;
+			}
 
-				if (Find.TickManager.Paused)
-				{
-					// Thank you publicizer
-					row.IncrementPosition(-WidgetRow.IconSize);
-					GUI.color = new Color(1, 1, 1, .5f);
-					row.Icon(FindTex.Cancel);
-					GUI.color = Color.white;
-				}
-			});
 		}
 	}
 
