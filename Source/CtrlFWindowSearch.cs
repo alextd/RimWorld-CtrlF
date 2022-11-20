@@ -19,7 +19,9 @@ namespace Ctrl_F
 		{
 			Current.Game.GetComponent<TD_Find_Lib.TDFindLibGameComp>().RemoveRefresh(findDesc);
 
-			findDesc = desc ?? new FindDescription(Find.CurrentMap) { name = "Ctrl-F Search" };
+			findDesc = desc ?? new FindDescription()
+				{ name = "Ctrl-F Search", active = true };
+
 			filterDrawer = new FindDescriptionDrawer(findDesc, "Ctrl-F Search") { locked = locked };
 
 			listWindow.SetFindDesc(findDesc);
@@ -77,7 +79,7 @@ namespace Ctrl_F
 				FilterStorageUtil.ButtonChooseImportFilter(row,
 					d => SetFindDesc(d, locked: filterDrawer.locked),
 					"Ctrl-F",
-					new FindDescription.CloneArgs() { type = FindDescription.CloneType.Use, map = Find.CurrentMap });
+					FindDescription.CloneArgs.use);
 				FilterStorageUtil.ButtonChooseExportFilter(row, filterDrawer.findDesc, "Ctrl-F");
 			});
 		}
@@ -199,7 +201,7 @@ namespace Ctrl_F
 
 		public string Source => "Ctrl-F";
 		public string ReceiveName => "View in Ctrl-F";
-		public FindDescription.CloneArgs CloneArgs => new FindDescription.CloneArgs() { type = FindDescription.CloneType.Use, map = Find.CurrentMap };
+		public FindDescription.CloneArgs CloneArgs => FindDescription.CloneArgs.use;
 
 		public bool CanReceive() => Find.CurrentMap != null;
 		public void Receive(FindDescription desc) => CtrlFWindowSearch.OpenWith(desc);

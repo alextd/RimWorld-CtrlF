@@ -31,8 +31,8 @@ namespace Ctrl_F
 					return;
 				}
 
-				FindDescription desc = new FindDescription(Find.CurrentMap)
-				{ name = "Ctrl-F Search" };
+				FindDescription desc = new FindDescription()
+					{ name = "Ctrl-F Search", active = true };
 
 				ListFilter filter = FilterForSelected();
 				bool selectedFilter = filter != null;
