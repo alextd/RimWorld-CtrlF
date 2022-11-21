@@ -115,28 +115,6 @@ namespace Ctrl_F
 	{
 		public CtrlFFindDescriptionDrawer(FindDescription findDesc, string title) : base(findDesc, title)
 		{ }
-
-		protected override void DrawHeader(Rect headerRect)
-		{
-			base.DrawHeader(headerRect);
-
-			//Extra options:
-			Rect allMapsRect = headerRect.RightPart(.3f);
-			Widgets.DrawHighlightIfMouseover(allMapsRect);
-			bool allMaps = findDesc.AllMaps;
-			Widgets.CheckboxLabeled(allMapsRect,
-					"TD.AllMaps".Translate(),
-					ref allMaps);
-			TooltipHandler.TipRegion(allMapsRect, "TD.CertainFiltersDontWorkForAllMaps-LikeZonesAndAreasThatAreObviouslySpecificToASingleMap".Translate());
-
-			if (!locked && allMaps != findDesc.AllMaps)
-			{
-				if (allMaps)
-					findDesc.SetSearchAllMaps();
-				else
-					findDesc.SetSearchCurrentMap();
-			}
-		}
 }
 
 	public class CtrlFWindowList : Window
