@@ -12,7 +12,7 @@ namespace Ctrl_F
 	public class CtrlFWindowSearch : Window
 	{
 		public FindDescription findDesc;
-		private FindDescriptionDrawer filterDrawer;
+		private CtrlFFindDescriptionDrawer filterDrawer;
 		private CtrlFWindowList listWindow;
 
 		public void SetFindDesc(FindDescription desc = null, bool locked = false)
@@ -20,15 +20,15 @@ namespace Ctrl_F
 			CtrlFRefresh prevRefresher = Current.Game.GetComponent<TDFindLibGameComp>().GetRefresher<CtrlFRefresh>(findDesc);
 
 			findDesc = desc ?? new FindDescription()
-				{ name = "Ctrl-F Search", active = true };
+			{ name = "Ctrl-F Search", active = true };
 
-			filterDrawer = new FindDescriptionDrawer(findDesc, "Ctrl-F Search") { locked = locked };
+			filterDrawer = new(findDesc, "Ctrl-F Search") { locked = locked };
 
 			listWindow.SetFindDesc(findDesc);
 
 			if (prevRefresher != null)
 				prevRefresher.desc = findDesc;
-			}
+		}
 
 		public CtrlFWindowSearch()
 		{
@@ -91,7 +91,7 @@ namespace Ctrl_F
 		public static CtrlFWindowSearch window = new CtrlFWindowSearch();
 		public static void OpenWith(FindDescription desc, bool locked = false, bool remake = true)
 		{
-			if(desc != window.findDesc)
+			if (desc != window.findDesc)
 				window.SetFindDesc(desc, locked);
 
 			if (remake)
@@ -107,6 +107,34 @@ namespace Ctrl_F
 			{
 				window.findDesc?.RemakeList();
 				Find.WindowStack.Add(window);
+			}
+		}
+	}
+
+	public class CtrlFFindDescriptionDrawer : FindDescriptionDrawer
+	{
+		public CtrlFFindDescriptionDrawer(FindDescription findDesc, string title) : base(findDesc, title)
+		{ }
+
+		protected override void DrawHeader(Rect headerRect)
+		{
+			base.DrawHeader(headerRect);
+
+			//Extra options:
+			Rect allMapsRect = headerRect.RightPart(.3f);
+			Widgets.DrawHighlightIfMouseover(allMapsRect);
+			bool allMaps = findDesc.AllMaps;
+			Widgets.CheckboxLabeled(allMapsRect,
+					"TD.AllMaps".Translate(),
+					ref allMaps);
+			TooltipHandler.TipRegion(allMapsRect, "TD.CertainFiltersDontWorkForAllMaps-LikeZonesAndAreasThatAreObviouslySpecificToASingleMap".Translate());
+
+			if (!locked && allMaps != findDesc.AllMaps)
+			{
+				if (allMaps)
+					findDesc.SetSearchAllMaps();
+				else
+					findDesc.SetSearchCurrentMap();
 			}
 		}
 }
