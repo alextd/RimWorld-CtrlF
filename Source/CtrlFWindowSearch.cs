@@ -34,7 +34,6 @@ namespace Ctrl_F
 		{
 			listWindow = new CtrlFWindowList();
 
-			layer = WindowLayer.GameUI;
 			doCloseButton = true;
 			doCloseX = true;
 			closeOnAccept = false;
@@ -99,6 +98,8 @@ namespace Ctrl_F
 
 			if (!Find.WindowStack.IsOpen(window))
 				Find.WindowStack.Add(window);
+			else
+				Find.WindowStack.Notify_ClickedInsideWindow(window);
 		}
 		public static void Open()
 		{
@@ -130,7 +131,6 @@ namespace Ctrl_F
 
 		public CtrlFWindowList()
 		{
-			layer = WindowLayer.GameUI;
 			//soundAppear = null;
 			//soundClose = SoundDefOf.TabClose;
 			//doCloseButton = true;
