@@ -24,7 +24,7 @@ namespace Ctrl_F
 		{
 			if (CtrlFDefOf.OpenCtrlF.KeyDownEvent && Event.current.control)
 			{
-				if(Event.current.shift)
+				if (Event.current.shift)
 				{
 					CtrlFWindowSearch.Open();
 					Event.current.Use();
@@ -32,16 +32,16 @@ namespace Ctrl_F
 				}
 
 				FindDescription desc = new FindDescription()
-					{ name = "Ctrl-F Search", active = true };
+				{ name = "Ctrl-F Search", active = true };
 
-				ListFilter filter = FilterForSelected();
-				bool selectedFilter = filter != null;
+				ListFilter filter = Event.current.alt ? FilterForSelected() : null;
+				bool selectedFilter = filter != null; //aka Event.current.alt && something's selected
 
 				if (!selectedFilter)
 					filter = ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Name);
 
 				desc.Children.Add(filter, remake: selectedFilter, focus: true);
-				CtrlFWindowSearch.OpenWith(desc, remake:false);
+				CtrlFWindowSearch.OpenWith(desc, remake: false);
 				Event.current.Use();
 			}
 		}
