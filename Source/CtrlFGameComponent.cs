@@ -26,7 +26,7 @@ namespace Ctrl_F
 			{
 				if (Event.current.shift)
 				{
-					CtrlFWindowSearch.Open();
+					CtrlFSearchWindow.Open();
 					Event.current.Use();
 					return;
 				}
@@ -41,7 +41,7 @@ namespace Ctrl_F
 					filter = ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Name);
 
 				desc.Children.Add(filter, remake: selectedFilter, focus: true);
-				CtrlFWindowSearch.OpenWith(desc, remake: false);
+				CtrlFSearchWindow.OpenWith(desc, remake: false);
 				Event.current.Use();
 			}
 		}

@@ -9,11 +9,11 @@ using TD_Find_Lib;
 
 namespace Ctrl_F
 {
-	public class CtrlFWindowSearch : Window
+	public class CtrlFSearchWindow : Window
 	{
 		public FindDescription findDesc;
 		private CtrlFFindDescriptionDrawer filterDrawer;
-		private CtrlFWindowList listWindow;
+		private CtrlFListWindow listWindow;
 
 		public void SetFindDesc(FindDescription desc = null, bool locked = false)
 		{
@@ -30,9 +30,9 @@ namespace Ctrl_F
 				prevRefresher.desc = findDesc;
 		}
 
-		public CtrlFWindowSearch()
+		public CtrlFSearchWindow()
 		{
-			listWindow = new CtrlFWindowList();
+			listWindow = new CtrlFListWindow();
 
 			doCloseButton = true;
 			doCloseX = true;
@@ -87,7 +87,7 @@ namespace Ctrl_F
 		}
 
 
-		public static CtrlFWindowSearch window = new CtrlFWindowSearch();
+		public static CtrlFSearchWindow window = new CtrlFSearchWindow();
 		public static void OpenWith(FindDescription desc, bool locked = false, bool remake = true)
 		{
 			if (desc != window.findDesc)
@@ -118,7 +118,7 @@ namespace Ctrl_F
 		{ }
 }
 
-	public class CtrlFWindowList : Window
+	public class CtrlFListWindow : Window
 	{
 		private FindDescription findDesc;
 		private CtrlFThingListDrawer thingsDrawer;
@@ -129,7 +129,7 @@ namespace Ctrl_F
 			thingsDrawer = new CtrlFThingListDrawer(desc);
 		}
 
-		public CtrlFWindowList()
+		public CtrlFListWindow()
 		{
 			//soundAppear = null;
 			//soundClose = SoundDefOf.TabClose;
@@ -228,6 +228,6 @@ namespace Ctrl_F
 		public FindDescription.CloneArgs CloneArgs => FindDescription.CloneArgs.use;
 
 		public bool CanReceive() => Find.CurrentMap != null;
-		public void Receive(FindDescription desc) => CtrlFWindowSearch.OpenWith(desc);
+		public void Receive(FindDescription desc) => CtrlFSearchWindow.OpenWith(desc);
 	}
 }
