@@ -32,9 +32,8 @@ namespace Ctrl_F
 
 		public CtrlFSearchWindow()
 		{
-			listWindow = new CtrlFListWindow();
+			listWindow = new CtrlFListWindow(this);
 
-			doCloseButton = true;
 			doCloseX = true;
 			closeOnAccept = false;
 			//closeOnCancel = false;
@@ -65,12 +64,14 @@ namespace Ctrl_F
 
 		public override void PostOpen()
 		{
-			Find.WindowStack.Add(listWindow);
+			if(!Find.WindowStack.IsOpen(listWindow))
+				Find.WindowStack.Add(listWindow);
 		}
 
 		public override void PostClose()
 		{
-			Find.WindowStack.TryRemove(listWindow, false);
+			if(!listWindow.separated)
+				Find.WindowStack.TryRemove(listWindow, false);
 		}
 
 		public override void DoWindowContents(Rect fillRect)
@@ -120,20 +121,26 @@ namespace Ctrl_F
 
 	public class CtrlFListWindow : Window
 	{
+		private CtrlFSearchWindow parent;
 		private FindDescription findDesc;
 		private CtrlFThingListDrawer thingsDrawer;
-		public void SetFindDesc(FindDescription desc = null)
-		{
-			findDesc = desc;
+		private bool _separated;
 
-			thingsDrawer = new CtrlFThingListDrawer(desc);
+		public bool separated
+		{
+			get => _separated;
+			set
+			{
+				_separated = value;
+				doCloseX = _separated;
+			}
 		}
 
-		public CtrlFListWindow()
+		public CtrlFListWindow(CtrlFSearchWindow parent)
 		{
+			this.parent = parent;
 			//soundAppear = null;
 			//soundClose = SoundDefOf.TabClose;
-			//doCloseButton = true;
 			//doCloseX = true;
 			closeOnAccept = false;
 			closeOnCancel = false;
@@ -141,6 +148,13 @@ namespace Ctrl_F
 			preventCameraMotion = false;
 			resizeable = true;
 			draggable = true;
+		}
+
+		public void SetFindDesc(FindDescription desc = null)
+		{
+			findDesc = desc;
+
+			thingsDrawer = new CtrlFThingListDrawer(desc, this);
 		}
 
 		public override Vector2 InitialSize => new Vector2(360, 720);
@@ -154,6 +168,7 @@ namespace Ctrl_F
 
 		public override void PostClose()
 		{
+			Find.WindowStack.TryRemove(parent, false);
 			thingsDrawer.Close();
 		}
 
@@ -173,8 +188,12 @@ namespace Ctrl_F
 
 	class CtrlFThingListDrawer : ThingListDrawer
 	{
-		public CtrlFThingListDrawer(FindDescription findDesc) : base(findDesc)
-		{ }
+		private CtrlFListWindow parent;
+
+		public CtrlFThingListDrawer(FindDescription findDesc, CtrlFListWindow parent) : base(findDesc)
+		{
+			this.parent = parent;
+		}
 
 		public void Close()
 		{
@@ -212,6 +231,9 @@ namespace Ctrl_F
 				GUI.color = Color.white;
 			}
 
+			//Keep open
+			if (row.ButtonIcon(parent.separated ? CtrlFFindTex.Separated : CtrlFFindTex.Connected, "Toggle to keep this window open when the search window is closed"))
+				parent.separated = !parent.separated;
 		}
 	}
 
