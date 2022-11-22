@@ -48,8 +48,8 @@ namespace Ctrl_F
 		public override void SetInitialSizeAndPosition()
 		{
 			base.SetInitialSizeAndPosition();
-			windowRect.x = 0f;
-			windowRect.y = 0f;
+			windowRect.x = Window.StandardMargin;
+			windowRect.y = Window.StandardMargin;
 		}
 
 		public override void PreOpen()
@@ -148,8 +148,8 @@ namespace Ctrl_F
 		public override void SetInitialSizeAndPosition()
 		{
 			base.SetInitialSizeAndPosition();
-			windowRect.x = UI.screenWidth - windowRect.width;
-			windowRect.y = 0;
+			windowRect.x = UI.screenWidth - windowRect.width - Window.StandardMargin;
+			windowRect.y = Window.StandardMargin;
 		}
 
 		public override void PostClose()
