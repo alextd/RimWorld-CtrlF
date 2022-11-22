@@ -68,6 +68,12 @@ namespace Ctrl_F
 				Find.WindowStack.Add(listWindow);
 		}
 
+		public override void OnCancelKeyPressed()
+		{
+			if (!findDesc.OnCancelKeyPressed())
+				base.OnCancelKeyPressed();
+		}
+
 		public override void PostClose()
 		{
 			if(!listWindow.separated)
