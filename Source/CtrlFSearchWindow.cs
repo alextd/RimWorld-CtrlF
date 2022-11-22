@@ -35,7 +35,7 @@ namespace Ctrl_F
 			listWindow = new CtrlFListWindow(this);
 
 			doCloseX = true;
-			closeOnAccept = false;
+			closeOnAccept = true;	//Actually overriden. Hahah.
 			//closeOnCancel = false;
 			preventCameraMotion = false;
 			resizeable = true;
@@ -79,6 +79,13 @@ namespace Ctrl_F
 			if(!listWindow.separated)
 				Find.WindowStack.TryRemove(listWindow, false);
 		}
+
+		public override void OnAcceptKeyPressed()
+		{
+			listWindow.thingsDrawer.GoToFirst();
+			Event.current.Use();
+		}
+
 
 		public override void DoWindowContents(Rect fillRect)
 		{
@@ -129,7 +136,7 @@ namespace Ctrl_F
 	{
 		private CtrlFSearchWindow parent;
 		private FindDescription findDesc;
-		private CtrlFThingListDrawer thingsDrawer;
+		public CtrlFThingListDrawer thingsDrawer;
 		private bool _separated;
 
 		public bool separated
@@ -192,7 +199,7 @@ namespace Ctrl_F
 		}
 	}
 
-	class CtrlFThingListDrawer : ThingListDrawer
+	public class CtrlFThingListDrawer : ThingListDrawer
 	{
 		private CtrlFListWindow parent;
 
@@ -240,6 +247,17 @@ namespace Ctrl_F
 			//Keep open
 			if (row.ButtonIcon(parent.separated ? CtrlFFindTex.Separated : CtrlFFindTex.Connected, "Toggle to keep this window open when the search window is closed"))
 				parent.separated = !parent.separated;
+		}
+
+
+		public void GoToFirst()
+		{
+			if (findDesc.result.allThings.FirstOrDefault() is Thing thing)
+			{
+				Find.Selector.ClearSelection();
+				CameraJumper.TryJump(thing);
+				TrySelect.Select(thing);
+			}
 		}
 	}
 
