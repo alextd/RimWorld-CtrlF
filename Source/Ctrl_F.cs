@@ -14,7 +14,7 @@ namespace Ctrl_F
 	}
 
 	[StaticConstructorOnStartup]
-	public static class CtrlFFindTex
+	public static class CtrlFTex
 	{
 		//Names of objects in vanilla are haphazard so I might as well just declare these here.
 		public static readonly Texture2D Separated = ContentFinder<Texture2D>.Get("UI/Designators/ZoneDelete");

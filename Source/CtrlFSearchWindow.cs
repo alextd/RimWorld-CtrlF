@@ -115,12 +115,13 @@ namespace Ctrl_F
 			else
 				Find.WindowStack.Notify_ClickedInsideWindow(window);
 		}
-		public static void Open()
+		public static void Open(bool remake = true)
 		{
 			//Set to top ?
 			if (!Find.WindowStack.IsOpen(window))
 			{
-				window.findDesc?.RemakeList();
+				if(remake)
+					window.findDesc?.RemakeList();
 				Find.WindowStack.Add(window);
 			}
 		}
@@ -245,8 +246,13 @@ namespace Ctrl_F
 			}
 
 			//Keep open
-			if (row.ButtonIcon(parent.separated ? CtrlFFindTex.Separated : CtrlFFindTex.Connected, "Toggle to keep this window open when the search window is closed"))
-				parent.separated = !parent.separated;
+			if (row.ButtonIcon(parent.separated ? CtrlFTex.Separated : CtrlFTex.Connected, "Toggle to keep this window open when the search window is closed\n\nRight-click to-reopen Search window"))
+			{
+				if (Event.current.button == 1)
+					CtrlFSearchWindow.Open(false);
+				else
+					parent.separated = !parent.separated;
+			}
 		}
 
 
