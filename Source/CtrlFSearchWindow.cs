@@ -11,23 +11,23 @@ namespace Ctrl_F
 {
 	public class CtrlFSearchWindow : Window
 	{
-		public FindDescription findDesc;
-		private CtrlFFindDescriptionDrawer filterDrawer;
+		public QuerySearch search;
+		private CtrlFQuerySearchDrawer queryDrawer;
 		private CtrlFListWindow listWindow;
 
-		public void SetFindDesc(FindDescription desc = null, bool locked = false)
+		public void SetSearch(QuerySearch newSearch = null, bool locked = false)
 		{
-			CtrlFRefresh prevRefresher = Current.Game.GetComponent<TDFindLibGameComp>().GetRefresher<CtrlFRefresh>(findDesc);
+			CtrlFRefresh prevRefresher = Current.Game.GetComponent<TDFindLibGameComp>().GetRefresher<CtrlFRefresh>(newSearch);
 
-			findDesc = desc ?? new FindDescription()
+			this.search = newSearch ?? new QuerySearch()
 			{ name = "Ctrl-F Search", active = true };
 
-			filterDrawer = new(findDesc, "Ctrl-F Search") { locked = locked };
+			queryDrawer = new(search, "Ctrl-F Search") { locked = locked };
 
-			listWindow.SetFindDesc(findDesc);
+			listWindow.SetSearch(search);
 
 			if (prevRefresher != null)
-				prevRefresher.desc = findDesc;
+				prevRefresher.search = search;
 		}
 
 		public CtrlFSearchWindow()
@@ -54,10 +54,10 @@ namespace Ctrl_F
 		public override void PreOpen()
 		{
 			base.PreOpen();
-			if (findDesc == null)
+			if (search == null)
 			{
-				SetFindDesc();
-				findDesc.Children.Add(ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Name), remake: false, focus: true);
+				SetSearch();
+				search.Children.Add(ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_Name), remake: false, focus: true);
 				//Don't make the list - everything would match.
 			}
 		}
@@ -70,7 +70,7 @@ namespace Ctrl_F
 
 		public override void OnCancelKeyPressed()
 		{
-			if (!findDesc.OnCancelKeyPressed())
+			if (!search.OnCancelKeyPressed())
 				base.OnCancelKeyPressed();
 		}
 
@@ -89,26 +89,26 @@ namespace Ctrl_F
 
 		public override void DoWindowContents(Rect fillRect)
 		{
-			filterDrawer.DrawFindDescription(fillRect, row =>
+			queryDrawer.DrawQuerySearch(fillRect, row =>
 			{
-				FilterStorageUtil.ButtonOpenSettings(row);
-				FilterStorageUtil.ButtonChooseImportFilter(row,
-					d => SetFindDesc(d, locked: filterDrawer.locked),
+				SearchStorage.ButtonOpenSettings(row);
+				SearchStorage.ButtonChooseImportSearch(row,
+					d => SetSearch(d, locked: queryDrawer.locked),
 					"Ctrl-F",
-					FindDescription.CloneArgs.use);
-				FilterStorageUtil.ButtonChooseExportFilter(row, filterDrawer.findDesc, "Ctrl-F");
+					QuerySearch.CloneArgs.use);
+				SearchStorage.ButtonChooseExportSearch(row, queryDrawer.search, "Ctrl-F");
 			});
 		}
 
 
 		public static CtrlFSearchWindow window = new CtrlFSearchWindow();
-		public static void OpenWith(FindDescription desc, bool locked = false, bool remake = true)
+		public static void OpenWith(QuerySearch search, bool locked = false, bool remake = true)
 		{
-			if (desc != window.findDesc)
-				window.SetFindDesc(desc, locked);
+			if (search != window.search)
+				window.SetSearch(search, locked);
 
 			if (remake)
-				desc.RemakeList();
+				search.RemakeList();
 
 			if (!Find.WindowStack.IsOpen(window))
 				Find.WindowStack.Add(window);
@@ -121,22 +121,22 @@ namespace Ctrl_F
 			if (!Find.WindowStack.IsOpen(window))
 			{
 				if(remake)
-					window.findDesc?.RemakeList();
+					window.search?.RemakeList();
 				Find.WindowStack.Add(window);
 			}
 		}
 	}
 
-	public class CtrlFFindDescriptionDrawer : FindDescriptionDrawer
+	public class CtrlFQuerySearchDrawer : QuerySearchDrawer
 	{
-		public CtrlFFindDescriptionDrawer(FindDescription findDesc, string title) : base(findDesc, title)
+		public CtrlFQuerySearchDrawer(QuerySearch search, string title) : base(search, title)
 		{ }
 }
 
 	public class CtrlFListWindow : Window
 	{
 		private CtrlFSearchWindow parent;
-		private FindDescription findDesc;
+		private QuerySearch search;
 		public CtrlFThingListDrawer thingsDrawer;
 		private bool _separated;
 
@@ -164,11 +164,11 @@ namespace Ctrl_F
 			draggable = true;
 		}
 
-		public void SetFindDesc(FindDescription desc = null)
+		public void SetSearch(QuerySearch search = null)
 		{
-			findDesc = desc;
+			this.search = search;
 
-			thingsDrawer = new CtrlFThingListDrawer(desc, this);
+			thingsDrawer = new CtrlFThingListDrawer(search, this);
 		}
 
 		public override Vector2 InitialSize => new Vector2(360, 720);
@@ -204,14 +204,14 @@ namespace Ctrl_F
 	{
 		private CtrlFListWindow parent;
 
-		public CtrlFThingListDrawer(FindDescription findDesc, CtrlFListWindow parent) : base(findDesc)
+		public CtrlFThingListDrawer(QuerySearch search, CtrlFListWindow parent) : base(search)
 		{
 			this.parent = parent;
 		}
 
 		public void Close()
 		{
-			Current.Game.GetComponent<TDFindLibGameComp>().RemoveRefresh(findDesc);
+			Current.Game.GetComponent<TDFindLibGameComp>().RemoveRefresh(search);
 		}
 
 		public override void DrawIconButtons(WidgetRow row)
@@ -220,20 +220,20 @@ namespace Ctrl_F
 
 			//Manual refresh
 			if (row.ButtonIcon(TexUI.RotRightTex, "TD.Refresh".Translate()))
-				findDesc.RemakeList();
+				search.RemakeList();
 
 			//Continuous refresh
 			var comp = Current.Game.GetComponent<TDFindLibGameComp>();
-			bool refresh = comp.IsRefreshing(findDesc);
+			bool refresh = comp.IsRefreshing(search);
 			if (row.ButtonIconColored(TexUI.ArrowTexRight,
 				Find.TickManager.Paused ? "(Does not refresh when paused)" : "TD.ContinuousRefreshAboutEverySecond".Translate(),
 				refresh ? Color.green : Color.white,
 				Color.Lerp(Color.green, Color.white, 0.5f)))
 			{
 				if (refresh)
-					comp.RemoveRefresh(findDesc);
+					comp.RemoveRefresh(search);
 				else
-					comp.RegisterRefresh(new CtrlFRefresh(findDesc)); //every 60 or so
+					comp.RegisterRefresh(new CtrlFRefresh(search)); //every 60 or so
 			}
 
 			if (Find.TickManager.Paused)
@@ -258,7 +258,7 @@ namespace Ctrl_F
 
 		public void GoToFirst()
 		{
-			if (findDesc.result.allThings.FirstOrDefault() is Thing thing)
+			if (search.result.allThings.FirstOrDefault() is Thing thing)
 			{
 				Find.Selector.ClearSelection();
 				CameraJumper.TryJump(thing);
@@ -268,18 +268,18 @@ namespace Ctrl_F
 	}
 
 	[StaticConstructorOnStartup]
-	public class CtrlFReceiver : IFilterReceiver
+	public class CtrlFReceiver : ISearchReceiver
 	{
 		static CtrlFReceiver()
 		{
-			FilterTransfer.Register(new CtrlFReceiver());
+			SearchTransfer.Register(new CtrlFReceiver());
 		}
 
 		public string Source => "Ctrl-F";
 		public string ReceiveName => "View in Ctrl-F";
-		public FindDescription.CloneArgs CloneArgs => FindDescription.CloneArgs.use;
+		public QuerySearch.CloneArgs CloneArgs => QuerySearch.CloneArgs.use;
 
 		public bool CanReceive() => Find.CurrentMap != null;
-		public void Receive(FindDescription desc) => CtrlFSearchWindow.OpenWith(desc);
+		public void Receive(QuerySearch search) => CtrlFSearchWindow.OpenWith(search);
 	}
 }

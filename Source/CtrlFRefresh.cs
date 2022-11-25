@@ -8,15 +8,15 @@ using TD_Find_Lib;
 
 namespace Ctrl_F
 {
-	public class CtrlFRefresh : RefreshFindDesc
+	public class CtrlFRefresh : RefreshQuerySearch
 	{
-		public CtrlFRefresh(FindDescription desc): base(desc, "Ctrl-F", 60, false)
+		public CtrlFRefresh(QuerySearch search): base(search, "Ctrl-F", 60, false)
 		{
 		}
 
-		public override void OpenUI(FindDescription desc)
+		public override void OpenUI(QuerySearch search)
 		{
-			CtrlFSearchWindow.OpenWith(desc, remake:false);
+			CtrlFSearchWindow.OpenWith(search, remake:false);
 		}
 	}
 }

@@ -31,70 +31,70 @@ namespace Ctrl_F
 					return;
 				}
 
-				FindDescription desc = new FindDescription()
+				QuerySearch search = new QuerySearch()
 				{ name = "Ctrl-F Search", active = true };
 
-				ListFilter filter = Event.current.alt ? FilterForSelected() : null;
-				bool selectedFilter = filter != null; //aka Event.current.alt && something's selected
+				ThingQuery query = Event.current.alt ? QueryForSelected() : null;
+				bool selectedThing = query != null; //aka Event.current.alt && something's selected
 
-				if (!selectedFilter)
-					filter = ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Name);
+				if (!selectedThing)
+					query = ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_Name);
 
-				desc.Children.Add(filter, remake: selectedFilter, focus: true);
-				CtrlFSearchWindow.OpenWith(desc, remake: false);
+				search.Children.Add(query, remake: selectedThing, focus: true);
+				CtrlFSearchWindow.OpenWith(search, remake: false);
 				Event.current.Use();
 			}
 		}
 
 
-		public static ListFilter FilterForSelected()
+		public static ThingQuery QueryForSelected()
 		{
 			if (Find.Selector.SingleSelectedThing is Thing thing)
 			{
 				ThingDef def = thing.def;
 				if (Find.Selector.SelectedObjectsListForReading.All(o => o is Thing t && t.def == def))
-					return FilterForThing(thing);
+					return QueryForThing(thing);
 			}
 			else if (Find.Selector.SelectedZone is Zone zone)
 			{
-				ListFilterZone filterZone = (ListFilterZone)ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Zone);
-				filterZone.sel = zone;
-				return filterZone;
+				ThingQueryZone queryZone = (ThingQueryZone)ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_Zone);
+				queryZone.sel = zone;
+				return queryZone;
 			}
 
 			var defStuffs = Find.Selector.SelectedObjectsListForReading.Select(o => ((o as Thing).def, (o as Thing).Stuff)).Distinct().ToList();
 
 			if (defStuffs.Count > 0)
 			{
-				ListFilterGroup filterGroup = (ListFilterGroup)ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Group);
+				ThingQueryAndOrGroup queryGroup = (ThingQueryAndOrGroup)ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_AndOrGroup);
 				foreach ((ThingDef def, ThingDef stuffDef) in defStuffs)
-					filterGroup.Children.Add(FilterForThing(def, stuffDef));
-				return filterGroup;
+					queryGroup.Children.Add(QueryForThing(def, stuffDef));
+				return queryGroup;
 			}
 
 			return null;
 		}
 
 
-		public static ListFilter FilterForThing(Thing thing) => FilterForThing(thing.def, thing.Stuff);
+		public static ThingQuery QueryForThing(Thing thing) => QueryForThing(thing.def, thing.Stuff);
 
-		public static ListFilter FilterForThing(ThingDef def, ThingDef stuffDef)
+		public static ThingQuery QueryForThing(ThingDef def, ThingDef stuffDef)
 		{
-			ListFilterThingDef filterDef = (ListFilterThingDef)ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Def);
-			filterDef.sel = def;
+			ThingQueryThingDef queryDef = (ThingQueryThingDef)ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_Def);
+			queryDef.sel = def;
 			if(stuffDef == null)
-				return filterDef;
+				return queryDef;
 
-			ListFilterGroup filterGroup = (ListFilterGroup)ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Group);
-			filterGroup.any = false;  //All
+			ThingQueryAndOrGroup queryGroup = (ThingQueryAndOrGroup)ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_AndOrGroup);
+			queryGroup.any = false;  //All
 
-			filterGroup.Children.Add(filterDef, remake: false);
+			queryGroup.Children.Add(queryDef, remake: false);
 
-			ListFilterStuff filterStuff = (ListFilterStuff)ListFilterMaker.MakeFilter(ListFilterMaker.Filter_Stuff);
-			filterStuff.sel = stuffDef;
-			filterGroup.Children.Add(filterStuff, remake: false);
+			ThingQueryStuff queryStuff = (ThingQueryStuff)ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_Stuff);
+			queryStuff.sel = stuffDef;
+			queryGroup.Children.Add(queryStuff, remake: false);
 
-			return filterGroup;
+			return queryGroup;
 		}
 	}
 }
