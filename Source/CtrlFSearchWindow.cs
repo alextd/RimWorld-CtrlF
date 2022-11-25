@@ -97,6 +97,10 @@ namespace Ctrl_F
 					"Ctrl-F",
 					QuerySearch.CloneArgs.use);
 				SearchStorage.ButtonChooseExportSearch(row, queryDrawer.search, "Ctrl-F");
+#if DEBUG
+				if (DebugSettings.godMode && row.ButtonIcon(CtrlFTex.Infinity))
+					UnitTests.Run();
+#endif
 			});
 		}
 
