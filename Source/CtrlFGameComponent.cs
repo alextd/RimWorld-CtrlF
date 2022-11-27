@@ -86,7 +86,7 @@ namespace Ctrl_F
 				return queryDef;
 
 			ThingQueryAndOrGroup queryGroup = (ThingQueryAndOrGroup)ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_AndOrGroup);
-			queryGroup.any = false;  //All
+			queryGroup.Children.matchAllQueries = true;
 
 			queryGroup.Children.Add(queryDef, remake: false);
 
