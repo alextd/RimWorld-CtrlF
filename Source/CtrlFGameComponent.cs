@@ -32,7 +32,7 @@ namespace Ctrl_F
 				}
 
 				QuerySearch search = new QuerySearch()
-				{ name = "Ctrl-F Search", active = true };
+				{ name = "TD.CtrlFSearch".Translate(), active = true };
 
 				ThingQuery query = Event.current.alt ? QueryForSelected() : null;
 				bool selectedThing = query != null; //aka Event.current.alt && something's selected

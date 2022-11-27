@@ -20,9 +20,9 @@ namespace Ctrl_F
 			CtrlFRefresh prevRefresher = Current.Game.GetComponent<TDFindLibGameComp>().GetRefresher<CtrlFRefresh>(newSearch);
 
 			this.search = newSearch ?? new QuerySearch()
-			{ name = "Ctrl-F Search", active = true };
+			{ name = "TD.CtrlFSearch".Translate(), active = true };
 
-			queryDrawer = new(search, "Ctrl-F Search") { locked = locked };
+			queryDrawer = new(search, "TD.CtrlFSearch".Translate()) { locked = locked };
 
 			listWindow.SetSearch(search);
 
@@ -94,9 +94,9 @@ namespace Ctrl_F
 				SearchStorage.ButtonOpenSettings(row);
 				SearchStorage.ButtonChooseImportSearch(row,
 					d => SetSearch(d, locked: queryDrawer.locked),
-					"Ctrl-F",
+					"TD.CtrlF".Translate(),
 					QuerySearch.CloneArgs.use);
-				SearchStorage.ButtonChooseExportSearch(row, queryDrawer.search, "Ctrl-F");
+				SearchStorage.ButtonChooseExportSearch(row, queryDrawer.search, "TD.CtrlF".Translate());
 #if DEBUG
 				if (DebugSettings.godMode && row.ButtonIcon(CtrlFTex.Infinity))
 					UnitTests.Run();
@@ -195,7 +195,7 @@ namespace Ctrl_F
 			Text.Font = GameFont.Medium;
 			Text.Anchor = TextAnchor.UpperCenter;
 			Rect headerRect = fillRect.TopPartPixels(Text.LineHeight).AtZero();
-			Widgets.Label(headerRect, "Ctrl-F Found Things");
+			Widgets.Label(headerRect, "TD.CtrlFFoundThings".Translate());
 			Text.Anchor = default;
 
 			fillRect.yMin = headerRect.yMax;
@@ -230,7 +230,7 @@ namespace Ctrl_F
 			var comp = Current.Game.GetComponent<TDFindLibGameComp>();
 			bool refresh = comp.IsRefreshing(search);
 			if (row.ButtonIconColored(TexUI.ArrowTexRight,
-				Find.TickManager.Paused ? "(Does not refresh when paused)" : "TD.ContinuousRefreshAboutEverySecond".Translate(),
+				Find.TickManager.Paused ? "TD.DoesNotRefreshWhenPaused".Translate() : "TD.ContinuousRefreshAboutEverySecond".Translate(),
 				refresh ? Color.green : Color.white,
 				Color.Lerp(Color.green, Color.white, 0.5f)))
 			{
@@ -250,7 +250,7 @@ namespace Ctrl_F
 			}
 
 			//Keep open
-			if (row.ButtonIcon(parent.separated ? CtrlFTex.Separated : CtrlFTex.Connected, "Toggle to keep this window open when the search window is closed\n\nRight-click to-reopen Search window"))
+			if (row.ButtonIcon(parent.separated ? CtrlFTex.Separated : CtrlFTex.Connected, "TD.ToggleToKeepThisWindowOpen".Translate()))
 			{
 				if (Event.current.button == 1)
 					CtrlFSearchWindow.Open(false);
@@ -279,8 +279,8 @@ namespace Ctrl_F
 			SearchTransfer.Register(new CtrlFReceiver());
 		}
 
-		public string Source => "Ctrl-F";
-		public string ReceiveName => "View in Ctrl-F";
+		public string Source => "TD.CtrlF".Translate();
+		public string ReceiveName => "TD.ViewInCtrlF".Translate();
 		public QuerySearch.CloneArgs CloneArgs => QuerySearch.CloneArgs.use;
 
 		public bool CanReceive() => Find.CurrentMap != null;
