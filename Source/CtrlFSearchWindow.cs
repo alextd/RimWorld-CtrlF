@@ -111,23 +111,17 @@ namespace Ctrl_F
 			if (search != window.search)
 				window.SetSearch(search, locked);
 
+			Open(remake);
+		}
+		public static void Open(bool remake = true)
+		{
 			if (remake)
-				search.RemakeList();
+				window.search?.RemakeList();
 
 			if (!Find.WindowStack.IsOpen(window))
 				Find.WindowStack.Add(window);
 			else
 				Find.WindowStack.Notify_ClickedInsideWindow(window);
-		}
-		public static void Open(bool remake = true)
-		{
-			//Set to top ?
-			if (!Find.WindowStack.IsOpen(window))
-			{
-				if(remake)
-					window.search?.RemakeList();
-				Find.WindowStack.Add(window);
-			}
 		}
 	}
 
@@ -135,7 +129,7 @@ namespace Ctrl_F
 	{
 		public CtrlFQuerySearchDrawer(QuerySearch search, string title) : base(search, title)
 		{ }
-}
+	}
 
 	public class CtrlFListWindow : Window
 	{
