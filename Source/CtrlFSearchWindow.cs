@@ -91,7 +91,7 @@ namespace Ctrl_F
 		{
 			queryDrawer.DrawQuerySearch(fillRect, row =>
 			{
-				SearchStorage.ButtonOpenSettings(row);
+				SearchStorage.ButtonOpenLibrary(row);
 				SearchStorage.ButtonChooseImportSearch(row,
 					d => SetSearch(d, locked: queryDrawer.locked),
 					"TD.CtrlF".Translate(),
