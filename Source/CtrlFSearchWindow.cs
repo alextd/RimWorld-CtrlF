@@ -155,7 +155,7 @@ namespace Ctrl_F
 			//soundClose = SoundDefOf.TabClose;
 			//doCloseX = true;
 			closeOnAccept = false;
-			closeOnCancel = false;
+			//closeOnCancel = false;
 			//closing controlled by Search window.
 			preventCameraMotion = false;
 			resizeable = true;
