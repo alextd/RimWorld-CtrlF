@@ -48,7 +48,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="TD_Find_Lib">
-      <HintPath>..\..\TD Find Lib\Assemblies\TD_Find_Lib.dll</HintPath>
+      <HintPath>..\..\TDFindLib\Assemblies\TD_Find_Lib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
