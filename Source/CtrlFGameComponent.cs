@@ -38,7 +38,7 @@ namespace Ctrl_F
 				bool selectedThing = query != null; //aka Event.current.alt && something's selected
 
 				if (!selectedThing)
-					query = ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_Name);
+					query = ThingQueryMaker.MakeQuery<ThingQueryName>();
 
 				search.Children.Add(query, remake: selectedThing, focus: true);
 				CtrlFSearchWindow.OpenWith(search, remake: false);
@@ -57,7 +57,7 @@ namespace Ctrl_F
 			}
 			else if (Find.Selector.SelectedZone is Zone zone)
 			{
-				ThingQueryZone queryZone = (ThingQueryZone)ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_Zone);
+				ThingQueryZone queryZone = ThingQueryMaker.MakeQuery<ThingQueryZone>();
 				queryZone.sel = zone;
 				return queryZone;
 			}
@@ -66,7 +66,7 @@ namespace Ctrl_F
 
 			if (defStuffs.Count > 0)
 			{
-				ThingQueryAndOrGroup queryGroup = (ThingQueryAndOrGroup)ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_AndOrGroup);
+				ThingQueryAndOrGroup queryGroup = ThingQueryMaker.MakeQuery<ThingQueryAndOrGroup>();
 				foreach ((ThingDef def, ThingDef stuffDef) in defStuffs)
 					queryGroup.Children.Add(QueryForThing(def, stuffDef));
 				return queryGroup;
@@ -80,17 +80,17 @@ namespace Ctrl_F
 
 		public static ThingQuery QueryForThing(ThingDef def, ThingDef stuffDef)
 		{
-			ThingQueryThingDef queryDef = (ThingQueryThingDef)ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_Def);
+			ThingQueryThingDef queryDef = ThingQueryMaker.MakeQuery<ThingQueryThingDef>();
 			queryDef.sel = def;
 			if(stuffDef == null)
 				return queryDef;
 
-			ThingQueryAndOrGroup queryGroup = (ThingQueryAndOrGroup)ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_AndOrGroup);
+			ThingQueryAndOrGroup queryGroup = ThingQueryMaker.MakeQuery<ThingQueryAndOrGroup>();
 			queryGroup.Children.matchAllQueries = true;
 
 			queryGroup.Children.Add(queryDef, remake: false);
 
-			ThingQueryStuff queryStuff = (ThingQueryStuff)ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_Stuff);
+			ThingQueryStuff queryStuff = ThingQueryMaker.MakeQuery<ThingQueryStuff>();
 			queryStuff.sel = stuffDef;
 			queryGroup.Children.Add(queryStuff, remake: false);
 

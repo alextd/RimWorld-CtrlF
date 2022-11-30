@@ -57,7 +57,7 @@ namespace Ctrl_F
 			if (search == null)
 			{
 				SetSearch();
-				search.Children.Add(ThingQueryMaker.MakeQuery(ThingQueryMaker.Query_Name), remake: false, focus: true);
+				search.Children.Add(ThingQueryMaker.MakeQuery<ThingQueryName>(), remake: false, focus: true);
 				//Don't make the list - everything would match.
 			}
 		}
