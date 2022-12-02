@@ -269,7 +269,7 @@ namespace Ctrl_F
 			SearchTransfer.Register(new CtrlFReceiver());
 		}
 
-		public static string transferTag = "Ctrl-F";
+		public static string transferTag = "Ctrl-F";//notranslate
 		public string Source => transferTag;
 		public string ReceiveName => "TD.ViewInCtrlF".Translate();
 		public QuerySearch.CloneArgs CloneArgs => QuerySearch.CloneArgs.use;
