@@ -94,9 +94,9 @@ namespace Ctrl_F
 				SearchStorage.ButtonOpenLibrary(row);
 				SearchStorage.ButtonChooseImportSearch(row,
 					d => SetSearch(d, locked: queryDrawer.locked),
-					"TD.CtrlF".Translate(),
+					CtrlFReceiver.transferTag,
 					QuerySearch.CloneArgs.use);
-				SearchStorage.ButtonChooseExportSearch(row, queryDrawer.search, "TD.CtrlF".Translate());
+				SearchStorage.ButtonChooseExportSearch(row, queryDrawer.search, CtrlFReceiver.transferTag);
 			});
 		}
 
@@ -269,7 +269,8 @@ namespace Ctrl_F
 			SearchTransfer.Register(new CtrlFReceiver());
 		}
 
-		public string Source => "TD.CtrlF".Translate();
+		public static string transferTag = "Ctrl-F";
+		public string Source => transferTag;
 		public string ReceiveName => "TD.ViewInCtrlF".Translate();
 		public QuerySearch.CloneArgs CloneArgs => QuerySearch.CloneArgs.use;
 
