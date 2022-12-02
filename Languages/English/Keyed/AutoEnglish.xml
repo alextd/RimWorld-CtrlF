@@ -5,7 +5,7 @@
 	<TD.CtrlF>Ctrl-F</TD.CtrlF>
 	<TD.CtrlFFoundThings>Ctrl-F Found Things</TD.CtrlFFoundThings>
 	<TD.DoesNotRefreshWhenPaused>(Does not refresh when paused)</TD.DoesNotRefreshWhenPaused>
-	<TD.ToggleToKeepThisWindowOpen>Toggle to keep this window open when the search window is closed\n\nRight-click to-reopen Search window</TD.ToggleToKeepThisWindowOpen>
+	<TD.ToggleToKeepThisWindowOpen>Toggle to keep this window open when the search window is closed\n\nRight-click to re-open Search window</TD.ToggleToKeepThisWindowOpen>
 	<TD.ViewInCtrlF>View in Ctrl-F</TD.ViewInCtrlF>
 	
 </LanguageData>
