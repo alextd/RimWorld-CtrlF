@@ -64,8 +64,13 @@ namespace Ctrl_F
 
 		public override void PostOpen()
 		{
-			if(!Find.WindowStack.IsOpen(listWindow))
+			if (!Find.WindowStack.IsOpen(listWindow))
+			{
 				Find.WindowStack.Add(listWindow);
+
+				// But I'm in front:
+				Find.WindowStack.Notify_ClickedInsideWindow(this);
+			}
 		}
 
 		public override void OnCancelKeyPressed()
