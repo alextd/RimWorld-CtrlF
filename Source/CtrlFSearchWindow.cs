@@ -75,8 +75,13 @@ namespace Ctrl_F
 
 		public override void OnCancelKeyPressed()
 		{
-			if (!search.OnCancelKeyPressed())
+			if (!search.Unfocus())
 				base.OnCancelKeyPressed();
+		}
+
+		public override void Notify_ClickOutsideWindow()
+		{
+			search.Unfocus();
 		}
 
 		public override void PostClose()
