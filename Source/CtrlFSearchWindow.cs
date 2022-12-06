@@ -99,6 +99,16 @@ namespace Ctrl_F
 
 		public override void DoWindowContents(Rect fillRect)
 		{
+			if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.V && Event.current.control)
+			{
+				ClipboardTransfer clippy = new();
+				if (clippy.ProvideMethod() == ISearchProvider.Method.Single)
+				{
+					SetSearch(clippy.ProvideSingle().CloneForUseSingle(), true);
+					Event.current.Use();
+				}
+			}
+
 			queryDrawer.DrawQuerySearch(fillRect, row =>
 			{
 				SearchStorage.ButtonChooseImportSearch(row,
