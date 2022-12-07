@@ -26,7 +26,7 @@ namespace Ctrl_F
 			{
 				if (Event.current.shift)
 				{
-					CtrlFSearchWindow.Open();
+					MainButtonWorker_ToggleCtrlFWindow.Open();
 					Event.current.Use();
 					return;
 				}
@@ -41,7 +41,7 @@ namespace Ctrl_F
 					query = ThingQueryMaker.MakeQuery<ThingQueryName>();
 
 				search.Children.Add(query, remake: selectedThing, focus: true);
-				CtrlFSearchWindow.OpenWith(search, remake: false);
+				MainButtonWorker_ToggleCtrlFWindow.OpenWith(search, remake: false);
 				Event.current.Use();
 			}
 		}

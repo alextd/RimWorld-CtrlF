@@ -125,8 +125,11 @@ namespace Ctrl_F
 				Event.current.Use();
 			}
 		}
+	}
 
 
+	public class MainButtonWorker_ToggleCtrlFWindow : MainButtonWorker
+	{
 		public static CtrlFSearchWindow window = new CtrlFSearchWindow();
 		public static void OpenWith(QuerySearch search, bool locked = false, bool remake = true)
 		{
@@ -144,6 +147,19 @@ namespace Ctrl_F
 				Find.WindowStack.Add(window);
 			else
 				Find.WindowStack.Notify_ClickedInsideWindow(window);
+		}
+
+		public static void Toggle()
+		{
+			if (Find.WindowStack.WindowOfType<CtrlFSearchWindow>() is CtrlFSearchWindow w)
+				w.Close();
+			else
+				Open();
+		}
+
+		public override void Activate()
+		{
+			Toggle();
 		}
 	}
 
@@ -269,7 +285,7 @@ namespace Ctrl_F
 			if (row.ButtonIcon(parent.separated ? CtrlFTex.Separated : CtrlFTex.Connected, "TD.ToggleToKeepThisWindowOpen".Translate()))
 			{
 				if (Event.current.button == 1)
-					CtrlFSearchWindow.Open(false);
+					MainButtonWorker_ToggleCtrlFWindow.Open(false);
 				else
 					parent.separated = !parent.separated;
 			}
@@ -301,6 +317,6 @@ namespace Ctrl_F
 		public QuerySearch.CloneArgs CloneArgs => QuerySearch.CloneArgs.use;
 
 		public bool CanReceive() => Find.CurrentMap != null;
-		public void Receive(QuerySearch search) => CtrlFSearchWindow.OpenWith(search);
+		public void Receive(QuerySearch search) => MainButtonWorker_ToggleCtrlFWindow.OpenWith(search);
 	}
 }

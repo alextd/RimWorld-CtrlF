@@ -16,7 +16,7 @@ namespace Ctrl_F
 
 		public override void OpenUI(QuerySearch search)
 		{
-			CtrlFSearchWindow.OpenWith(search, remake:false);
+			MainButtonWorker_ToggleCtrlFWindow.OpenWith(search, remake:false);
 		}
 	}
 }
