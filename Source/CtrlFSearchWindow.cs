@@ -117,6 +117,13 @@ namespace Ctrl_F
 					QuerySearch.CloneArgs.use);
 				SearchStorage.ButtonChooseExportSearch(row, queryDrawer.search, CtrlFReceiver.transferTag);
 			});
+
+			if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.C && Event.current.control)
+			{
+				ClipboardTransfer clippy = new();
+				clippy.Receive(search);
+				Event.current.Use();
+			}
 		}
 
 
