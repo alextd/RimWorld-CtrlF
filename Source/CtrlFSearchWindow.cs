@@ -9,10 +9,8 @@ using TD_Find_Lib;
 
 namespace Ctrl_F
 {
-	public class CtrlFSearchWindow : Window
+	public class CtrlFSearchWindow : QueryDrawerWindow
 	{
-		public QuerySearch search;
-		private CtrlFQuerySearchDrawer queryDrawer;
 		private CtrlFListWindow listWindow;
 
 		public void SetSearch(QuerySearch newSearch = null, bool locked = false)
@@ -22,7 +20,7 @@ namespace Ctrl_F
 			this.search = newSearch ?? new QuerySearch()
 			{ name = "TD.CtrlFSearch".Translate(), active = true };
 
-			queryDrawer = new(search, "TD.CtrlFSearch".Translate()) { locked = locked };
+			this.locked = locked;
 
 			listWindow.SetSearch(search);
 
@@ -33,13 +31,11 @@ namespace Ctrl_F
 		public CtrlFSearchWindow()
 		{
 			listWindow = new CtrlFListWindow(this);
+			transferTag = CtrlFReceiver.transferTag;
 
-			doCloseX = true;
-			closeOnAccept = true;	//Actually overriden. Hahah.
-			//closeOnCancel = false;
-			preventCameraMotion = false;
-			resizeable = true;
-			draggable = true;
+			title = "TD.CtrlFSearch".Translate();
+
+			closeOnAccept = true;	//Actually overriden OnAcceptKeyPressed so doesn't close, Hahah.
 		}
 
 		public override Vector2 InitialSize => new Vector2(600, 600);
@@ -73,17 +69,6 @@ namespace Ctrl_F
 			}
 		}
 
-		public override void OnCancelKeyPressed()
-		{
-			if (!search.Unfocus())
-				base.OnCancelKeyPressed();
-		}
-
-		public override void Notify_ClickOutsideWindow()
-		{
-			search.Unfocus();
-		}
-
 		public override void PostClose()
 		{
 			if(!listWindow.separated)
@@ -96,34 +81,10 @@ namespace Ctrl_F
 			Event.current.Use();
 		}
 
-
-		public override void DoWindowContents(Rect fillRect)
+		public override QuerySearch.CloneArgs ImportArgs => QuerySearch.CloneArgs.use;
+		public override void Import(QuerySearch search)
 		{
-			if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.V && Event.current.control)
-			{
-				ClipboardTransfer clippy = new();
-				if (clippy.ProvideMethod() == ISearchProvider.Method.Single)
-				{
-					SetSearch(clippy.ProvideSingle().CloneForUseSingle(), true);
-					Event.current.Use();
-				}
-			}
-
-			queryDrawer.DrawQuerySearch(fillRect, row =>
-			{
-				SearchStorage.ButtonChooseImportSearch(row,
-					d => SetSearch(d, locked: queryDrawer.locked),
-					CtrlFReceiver.transferTag,
-					QuerySearch.CloneArgs.use);
-				SearchStorage.ButtonChooseExportSearch(row, queryDrawer.search, CtrlFReceiver.transferTag);
-			});
-
-			if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.C && Event.current.control)
-			{
-				ClipboardTransfer clippy = new();
-				clippy.Receive(search);
-				Event.current.Use();
-			}
+			SetSearch(search, true);
 		}
 	}
 
@@ -161,12 +122,6 @@ namespace Ctrl_F
 		{
 			Toggle();
 		}
-	}
-
-	public class CtrlFQuerySearchDrawer : QuerySearchDrawer
-	{
-		public CtrlFQuerySearchDrawer(QuerySearch search, string title) : base(search, title)
-		{ }
 	}
 
 	public class CtrlFListWindow : Window
