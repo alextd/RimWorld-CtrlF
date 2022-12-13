@@ -211,7 +211,10 @@ namespace Ctrl_F
 
 			//Manual refresh
 			if (row.ButtonIcon(TexUI.RotRightTex, "TD.Refresh".Translate()))
+			{
+				search.changedSinceRemake = true;
 				search.RemakeList();
+			}
 
 			//Continuous refresh
 			var comp = Current.Game.GetComponent<TDFindLibGameComp>();
