@@ -34,8 +34,6 @@ namespace Ctrl_F
 			transferTag = CtrlFReceiver.transferTag;
 
 			title = "TD.CtrlFSearch".Translate();
-
-			closeOnAccept = true;	//Actually overriden OnAcceptKeyPressed so doesn't close, Hahah.
 		}
 
 		public override Vector2 InitialSize => new Vector2(600, 600);
@@ -74,12 +72,13 @@ namespace Ctrl_F
 			if(!listWindow.separated)
 				Find.WindowStack.TryRemove(listWindow, false);
 		}
-
+/*
 		public override void OnAcceptKeyPressed()
 		{
 			listWindow.thingsDrawer.GoToFirst();
 			Event.current.Use();
 		}
+*/
 
 		public override QuerySearch.CloneArgs ImportArgs => QuerySearch.CloneArgs.use;
 		public override void Import(QuerySearch search)
