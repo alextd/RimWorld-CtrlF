@@ -11,21 +11,23 @@ namespace Ctrl_F
 {
 	public class CtrlFSearchWindow : QueryDrawerWindow
 	{
+		public QuerySearch Search => filter as QuerySearch;
+
 		private CtrlFListWindow listWindow;
 
 		public void SetSearch(QuerySearch newSearch = null, bool locked = false)
 		{
 			CtrlFRefresh prevRefresher = Current.Game.GetComponent<TDFindLibGameComp>().GetRefresher<CtrlFRefresh>(newSearch);
 
-			this.search = newSearch ?? new QuerySearch()
+			filter = newSearch ?? new QuerySearch()
 			{ name = "TD.CtrlFSearch".Translate(), active = true };
 
 			this.locked = locked;
 
-			listWindow.SetSearch(search);
+			listWindow.SetSearch(Search);
 
 			if (prevRefresher != null)
-				prevRefresher.search = search;
+				prevRefresher.search = Search;
 		}
 
 		public CtrlFSearchWindow()
@@ -48,10 +50,10 @@ namespace Ctrl_F
 		public override void PreOpen()
 		{
 			base.PreOpen();
-			if (search == null)
+			if (Search == null)
 			{
 				SetSearch();
-				search.Children.Add(ThingQueryMaker.MakeQuery<ThingQueryName>(), remake: false, focus: true);
+				Search.Children.Add(ThingQueryMaker.MakeQuery<ThingQueryName>(), remake: false, focus: true);
 				//Don't make the list - everything would match.
 			}
 		}
@@ -93,7 +95,7 @@ namespace Ctrl_F
 		public static CtrlFSearchWindow window = new CtrlFSearchWindow();
 		public static void OpenWith(QuerySearch search, bool locked = false, bool remake = true)
 		{
-			if (search != window.search)
+			if (search != window.Search)
 				window.SetSearch(search, locked);
 
 			Open(remake);
@@ -101,7 +103,7 @@ namespace Ctrl_F
 		public static void Open(bool remake = true)
 		{
 			if (remake)
-				window.search?.RemakeList();
+				window.Search?.RemakeList();
 
 			if (!Find.WindowStack.IsOpen(window))
 				Find.WindowStack.Add(window);
