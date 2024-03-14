@@ -3,7 +3,7 @@
 	<name>Ctrl F - Dev Build</name>
 	<author>Uuugggg</author>
 	<supportedVersions>
-		<li>1.4</li>
+		<li>1.5</li>
 	</supportedVersions>
 	<packageId>DEBUuugggg.CtrlF</packageId>
 	<description>Press Ctrl-F to find anything on the map, with very thorough options to filter the list. 
